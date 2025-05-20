@@ -30,11 +30,11 @@ public class GeminiIntegrationApplication {
 	public static void main(String[] args) throws Exception {
 		System.out.println("What would you like to search:");
 		Scanner sc = new Scanner(System.in);
-		testConnection(sc.nextLine());
+		openConnection(sc.nextLine());
 		sc.close();
 	}
 
-	private static void testConnection(String input) throws Exception {
+	private static void openConnection(String input) throws Exception {
 		String url = GEMINI_API_URL.concat(apiKey);
 		String finalRequest = new ObjectMapper().writeValueAsString(updateRequest(input));
 		RestTemplate template = getRestTemplate(url);
