@@ -25,6 +25,7 @@ import static com.ai.geminiIntegration.util.ApplicationConstants.GEMINI_API_URL;
 @SpringBootApplication
 public class GeminiIntegrationApplication {
 
+	//Retrieve API Key from DB
 	private static final String apiKey = AIRepository.getInstance().retrieveAIInformation(API_KEY);
 
 	public static void main(String[] args) throws Exception {
@@ -34,6 +35,11 @@ public class GeminiIntegrationApplication {
 		sc.close();
 	}
 
+	/**
+	 * Establish communication with Gemini API
+	 * @param input User prompt
+	 * @throws Exception
+	 */
 	private static void openConnection(String input) throws Exception {
 		String url = GEMINI_API_URL.concat(apiKey);
 		String finalRequest = new ObjectMapper().writeValueAsString(updateRequest(input));
@@ -43,6 +49,11 @@ public class GeminiIntegrationApplication {
 		extractResponse(response.getBody());
 	}
 
+	/**
+	 * Creating request with all the required fields
+	 * @param input User prompt
+	 * @return AI Request object
+	 */
 	static AIRequest updateRequest(String input) {
 		// Create an instance of AIRequest
 		AIRequest aiRequest = new AIRequest();
@@ -62,24 +73,27 @@ public class GeminiIntegrationApplication {
 		contents.add(content);
 		aiRequest.setContents(contents);
 
-		// Print the value to verify
-		//System.out.println("Text: " + aiRequest.getContents().get(0).getParts().get(0).getText());
 		return aiRequest;
 	}
 
+	/**
+	 * Converting raw json into java class -> then extracting certain data from fields
+	 * @param rawJSONResponse
+	 */
 	private static void extractResponse(String rawJSONResponse) {
 		try {
-			Gson gson = new Gson();
-			AIResponse aiResponse = gson.fromJson(rawJSONResponse, AIResponse.class);
+			//Deserializing AI raw json response into java class
+			AIResponse aiResponse = new Gson().fromJson(rawJSONResponse, AIResponse.class);
 
-			// Example: Accessing the first part's text
-			String text = aiResponse.candidates.get(0).content.parts.get(0).text;
-			System.out.println("Extracted Explanation: \n" + text);
+			//Extract Candidate Object from Candidates List
+			AIResponse.Candidate candidate = aiResponse.candidates.get(0);
 
-			// Step 4: Extract and print URI fields
-			List<AIResponse.CitationSource> sources =
-					aiResponse.candidates.get(0).citationMetadata.citationSources;
+			//Extracting text that contains the AI Response
+			System.out.println("Extracted Explanation: \n" + candidate.content.parts.get(0).text);
 
+			//Extracting additional metadata from response
+			List<AIResponse.CitationSource> sources = candidate.citationMetadata.citationSources;
+			//Extracting URI links from metadata section in AI Response
 			System.out.println("Extracted URIs:");
 			for (AIResponse.CitationSource source : sources) {
 				System.out.println(source.uri);
