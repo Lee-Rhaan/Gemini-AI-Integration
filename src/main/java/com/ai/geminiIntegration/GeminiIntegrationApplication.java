@@ -27,12 +27,46 @@ public class GeminiIntegrationApplication {
 
 	//Retrieve API Key from DB
 	private static final String apiKey = AIRepository.getInstance().retrieveAIInformation(API_KEY);
+	private static Scanner sc = new Scanner(System.in);
 
 	public static void main(String[] args) throws Exception {
-		System.out.println("What would you like to search:");
-		Scanner sc = new Scanner(System.in);
-		openConnection(sc.nextLine());
+		startApplication();
 		sc.close();
+	}
+
+	/**
+	 * Created this method to start the application because I need to execute this logic
+	 * more than once. If the user wants to ask additional questions, then I can just
+	 * call this method again to start the whole process from scratch.
+	 *
+	 * @throws Exception
+	 */
+	private static void startApplication() throws Exception {
+		System.out.println("What would you like to search:");
+		openConnection(sc.nextLine());
+		//making sure everything is done executing before continuing flow of application
+		Thread.sleep(500);
+		System.out.println("Do you have any additional questions? [Y] or [N]");
+		continueCommunication(sc.nextLine());
+	}
+
+	/**
+	 * Restarts flow of application if user needs to ask additional questions
+	 * @param userInput "Y" or "N" input to determine if application needs to continue running
+	 * @throws Exception
+	 */
+	private static void continueCommunication(String userInput) throws Exception {
+		switch (userInput) {
+			case "Y":
+				startApplication();
+				break;
+			case "N":
+				System.err.println("[Closing Communication]");
+				break;
+			default:
+				System.err.println("[Incorrect Input] \n" + "Stopping Application...");
+				break;
+		}
 	}
 
 	/**
