@@ -16,4 +16,7 @@ public class ApplicationConstants {
     //Gemini AI URLs
     public final static String GEMINI_API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=";
 
+    //Application Specific Constants
+    public final static String LINE_BREAK = "=========================================================================================";
+
 }

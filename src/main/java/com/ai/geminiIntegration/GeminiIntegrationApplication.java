@@ -19,8 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import static com.ai.geminiIntegration.util.ApplicationConstants.API_KEY;
-import static com.ai.geminiIntegration.util.ApplicationConstants.GEMINI_API_URL;
+import static com.ai.geminiIntegration.util.ApplicationConstants.*;
 
 @SpringBootApplication
 public class GeminiIntegrationApplication {
@@ -46,6 +45,7 @@ public class GeminiIntegrationApplication {
 		openConnection(sc.nextLine());
 		//making sure everything is done executing before continuing flow of application
 		Thread.sleep(500);
+		System.out.println(LINE_BREAK);
 		System.out.println("Do you have any additional questions? [Y] or [N]");
 		continueCommunication(sc.nextLine());
 	}
